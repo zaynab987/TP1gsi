@@ -88,18 +88,23 @@ def create_json():
 def save_datetime():
     # Save the current date and time to the JSON file
     current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    data = {}
     
     # Load existing data if the file exists
     if os.path.exists(JSON_FILE):
         with open(JSON_FILE, 'r') as file:
             data = json.load(file)
+    else:
+        data = {}
+
+    # If the key 'dates' doesn't exist, create it as an empty list
+    if 'dates' not in data:
+        data['dates'] = []
     
-    # Add the current date and time
-    data['current_datetime'] = current_time
+    # Append the current date and time to the list
+    data['dates'].append(current_time)
     
     # Save the data back to the file
-    with open(JSON_FILE, 'a') as file:
+    with open(JSON_FILE, 'w') as file:
         json.dump(data, file, indent=4)
     
     return '<p>Current date and time saved successfully! <a href="/">Go back</a></p>'
@@ -112,7 +117,7 @@ def print_dates():
             data = json.load(file)
         
         # Extract all date-related entries
-        dates = {key: value for key, value in data.items() if 'datetime' in key.lower()}
+        dates = data.get('dates', [])
         
         # Return the dates in the JSON response
         return jsonify(dates)
