@@ -99,7 +99,7 @@ def save_datetime():
     data['current_datetime'] = current_time
     
     # Save the data back to the file
-    with open(JSON_FILE, 'w') as file:
+    with open(JSON_FILE, 'a') as file:
         json.dump(data, file, indent=4)
     
     return '<p>Current date and time saved successfully! <a href="/">Go back</a></p>'
