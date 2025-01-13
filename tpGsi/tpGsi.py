@@ -66,6 +66,9 @@ def welcome():
             <form action="/save-datetime" method="post">
                 <button type="submit">Save Current Date and Time</button>
             </form>
+            <form action="/print-dates" method="get">
+                <button type="submit">Print Dates</button>
+            </form>
         </div>
     </body>
     </html>
@@ -100,6 +103,21 @@ def save_datetime():
         json.dump(data, file, indent=4)
     
     return '<p>Current date and time saved successfully! <a href="/">Go back</a></p>'
+
+@app.route('/print-dates', methods=['GET'])
+def print_dates():
+    # Retrieve the data from the JSON file
+    if os.path.exists(JSON_FILE):
+        with open(JSON_FILE, 'r') as file:
+            data = json.load(file)
+        
+        # Extract all date-related entries
+        dates = {key: value for key, value in data.items() if 'datetime' in key.lower()}
+        
+        # Return the dates in the JSON response
+        return jsonify(dates)
+    else:
+        return '<p>No data file found. Please create or save the datetime first. <a href="/">Go back</a></p>'
 
 if __name__ == '__main__':
     # Use the PORT environment variable provided by Render or default to 5000
